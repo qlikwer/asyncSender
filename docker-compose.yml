@@ -1,0 +1,18 @@
+version: '3.3'
+services:
+  async-sender:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: qlikwer/async-sender
+    container_name: boobl-asyncSender # Вместо <project-name> укажите имя своего проекта
+    ports:
+      - "8095:8080"
+    restart: unless-stopped
+    environment:
+      - BOT_TOKEN=test # Укажите здесь токен своего бота
+    healthcheck:
+      test: [ "CMD", "curl", "--fail", "http://localhost:8080/api/health", "||", "exit", "1" ]
+      interval: 30s
+      timeout: 10s
+      retries: 3
