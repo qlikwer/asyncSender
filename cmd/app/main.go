@@ -17,7 +17,7 @@ var (
 
 func main() {
 
-	bot, err := sender.InitSender()
+	sndr, err := sender.InitSender()
 	if err != nil {
 		logger.Fatal(err)
 	}
@@ -29,7 +29,7 @@ func main() {
 		for range messageSendingTicker.C {
 			messageToSend = messageQueue.Dequeue()
 			if messageToSend != nil {
-				err = bot.SendMessage(sender.SendMessageParams{
+				err = sndr.SendMessage(sender.SendMessageParams{
 					Url:         messageToSend.Url,
 					Data:        messageToSend.Data,
 					RequestType: messageToSend.RequestType,

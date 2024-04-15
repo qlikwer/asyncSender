@@ -14,7 +14,9 @@ func StartServer(messageQueue *messageModule.Queue) {
 	})
 
 	apiRouter := app.Group("/api")
-	apiRouter.Get("/health", handlers.HealthCheckerHandler)
+	apiRouter.Get("/health", func(c *fiber.Ctx) error {
+		return handlers.HealthCheckerHandler(c, messageQueue)
+	})
 	apiRouter.Post("/send", func(c *fiber.Ctx) error {
 		return handlers.SendMessageHandler(c, messageQueue)
 	})

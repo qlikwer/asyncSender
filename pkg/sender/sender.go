@@ -1,6 +1,7 @@
 package sender
 
 import (
+	"asyncSender/pkg/logger"
 	"bytes"
 	"encoding/json"
 	"fmt"
@@ -70,6 +71,7 @@ func (b *Bot) SendMessage(params SendMessageParams) error {
 	if err != nil {
 		return err
 	}
+	logger.Info(respBody)
 
 	var result struct {
 		Ok          bool   `json:"ok"`
