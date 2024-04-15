@@ -36,15 +36,11 @@ func main() {
 				})
 				if err != nil {
 					logger.Errorf("Ошибка отправки сообщения: %v", err)
-					var telegramErr *sender.SendError
-					if errors.As(err, &telegramErr) {
-						retryAfter, _ := sender.ParseRetryAfter(telegramErr)
-						if retryAfter != 0 {
-							logger.Warningf("Сервис прилёг отдохнуть на %d %s",
-								retryAfter, sender.Pluralize(retryAfter, "секунда", "секунды", "секунд"))
-							time.Sleep(time.Duration(retryAfter) * time.Second)
-							messageQueue.AddToTheBeginningEnqueue(*messageToSend) // Помещаем сообщение в начало очереди
-						}
+					var err *sender.SendError
+					if errors.As(err, &err) {
+						logger.Warningf("Сервис вернул ошибку, повторяем отправку")
+						time.Sleep(5 * time.Second)
+						messageQueue.AddToTheBeginningEnqueue(*messageToSend) // Помещаем сообщение в начало очереди
 					}
 				} else {
 					logger.Info("Запрос успешно отправлен")
