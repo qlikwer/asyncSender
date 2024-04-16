@@ -1,11 +1,14 @@
 package message
 
-import "sync"
+import (
+	"sync"
+)
 
 type Message struct {
 	Url         string `json:"Url"`
 	Data        string `json:"json data"`
 	RequestType string `json:"Request type"`
+	Iteration   int    `json:"Current iteration"`
 }
 
 type Queue struct {

@@ -34,6 +34,7 @@ func SendMessageHandler(c *fiber.Ctx, messageQueue *messageModule.Queue) error {
 		Url:         Url,
 		Data:        string(Data),
 		RequestType: RequestType,
+		Iteration:   0,
 	}
 
 	messageQueue.Enqueue(newMessage) // Добавляем сообщение в очередь

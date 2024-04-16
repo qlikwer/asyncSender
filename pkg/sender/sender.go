@@ -28,6 +28,7 @@ type SendMessageParams struct {
 	Url         string `json:"Url"`
 	Data        string `json:"json data"`
 	RequestType string `json:"Request type"`
+	Iteration   int    `json:"Current iteration"`
 }
 
 func InitSender() (*Sender, error) {
@@ -49,7 +50,7 @@ func (b *Sender) SendMessage(params SendMessageParams) error {
 	if !inArray(params.RequestType, []string{"POST", "GET"}) {
 		return &SendError{
 			Code:        400,
-			Description: "Unsupported protocol scheme",
+			Description: "Unsupported request type",
 		}
 	}
 
@@ -75,7 +76,6 @@ func (b *Sender) SendMessage(params SendMessageParams) error {
 	if err != nil {
 		return err
 	}
-	logger.Info("respBody: " + string(respBody))
 
 	var result struct {
 		Status         string `json:"status"`
@@ -98,6 +98,24 @@ func (b *Sender) SendMessage(params SendMessageParams) error {
 	}
 
 	return nil
+}
+
+func Pluralize(n int, singular, plural1, plural2 string) string {
+	n = n % 100
+	if n > 10 && n < 20 {
+		return plural2
+	}
+
+	n = n % 10
+	if n == 1 {
+		return singular
+	}
+
+	if n > 1 && n < 5 {
+		return plural1
+	}
+
+	return plural2
 }
 
 func (e *SendError) Error() string {
