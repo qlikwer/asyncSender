@@ -38,26 +38,24 @@ func main() {
 					Data:        messageToSend.Data,
 					RequestType: messageToSend.RequestType,
 					Iteration:   messageToSend.Iteration,
+					Headers:     messageToSend.Headers,
 				})
 				if err != nil {
 					if messageToSend.Iteration >= MAX_ITERATION_COUNTER {
-						logger.Errorf("Сообщение не было отправлено за %d %s. Сообщение выброшено из очереди",
-							MAX_ITERATION_COUNTER, sender.Pluralize(
-								MAX_ITERATION_COUNTER, "итерация", "итерации", "итераций",
-							))
+						logger.Errorf("The message was not sent in %d iteration. Message discarded from queue",
+							MAX_ITERATION_COUNTER)
 					} else {
 						var err *sender.SendError
 						if errors.As(err, &err) {
 							logger.Warningf(
-								"Сервис вернул ошибку, текущая итерация: %d, повторяем отправку. Data: %s", messageToSend.Iteration, messageToSend.Data,
+								"The service returned an error, current iteration: %d, repeat sending. Data: %s",
+								messageToSend.Iteration, messageToSend.Data,
 							)
-							time.Sleep(5 * time.Second)
-							//messageQueue.AddToTheBeginningEnqueue(*messageToSend) // Помещаем сообщение в начало очереди
-							messageQueue.Enqueue(*messageToSend) // Помещаем сообщение в конец очереди
+							messageQueue.AddToTheBeginningEnqueue(*messageToSend)
 						}
 					}
 				} else {
-					logger.Info("Запрос успешно отправлен")
+					logger.Info("Request sent successfully")
 				}
 			}
 		}

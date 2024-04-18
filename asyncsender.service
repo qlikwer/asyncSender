@@ -1,0 +1,13 @@
+[Unit]
+Description=Async Sender
+After=network.target
+
+[Service]
+Type=simple
+User=<username>
+Group=<groupname>
+ExecStart=<path>
+Restart=always
+
+[Install]
+WantedBy=multi-user.target

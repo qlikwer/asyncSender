@@ -19,7 +19,6 @@ func init() {
 			TimestampFormat: DateTimeFormat,
 			FullTimestamp:   true,
 			ForceFormatting: true,
-			ForceColors:     true,
 		},
 	}
 }

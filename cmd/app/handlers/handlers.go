@@ -10,7 +10,7 @@ import (
 
 func HealthCheckerHandler(c *fiber.Ctx, messageQueue *messageModule.Queue) error {
 	requestDateTime := time.Now().Format(logger.DateTimeFormat)
-	logger.Info("Проверка работоспособности. Размер очереди - " + fmt.Sprintf("%d", messageQueue.Size()))
+	logger.Info("Health check. Queue size - " + fmt.Sprintf("%d", messageQueue.Size()))
 
 	return c.JSON(fiber.Map{
 		"requestDateTine": requestDateTime,
@@ -21,13 +21,26 @@ func HealthCheckerHandler(c *fiber.Ctx, messageQueue *messageModule.Queue) error
 func SendMessageHandler(c *fiber.Ctx, messageQueue *messageModule.Queue) error {
 	requestDateTime := time.Now().Format(logger.DateTimeFormat)
 
-	Url := c.Get("Url")
+	allHeaders := c.GetReqHeaders()
+	RequestType := c.Method()
+
+	var Url string
+
+	for key, values := range allHeaders {
+		for _, value := range values {
+			switch key {
+			case "Url":
+				Url = value
+				delete(allHeaders, key)
+			}
+		}
+	}
+
 	Data := c.Body()
-	RequestType := c.Get("RequestType")
 
 	if len(Data) == 0 {
-		logger.Errorf("Ошибка чтения тела запроса")
-		return c.Status(fiber.StatusBadRequest).SendString("Ошибка чтения тела запроса")
+		logger.Errorf("Error reading request body")
+		return c.Status(fiber.StatusBadRequest).SendString("Error reading request body")
 	}
 
 	newMessage := messageModule.Message{
@@ -35,6 +48,7 @@ func SendMessageHandler(c *fiber.Ctx, messageQueue *messageModule.Queue) error {
 		Data:        string(Data),
 		RequestType: RequestType,
 		Iteration:   0,
+		Headers:     allHeaders,
 	}
 
 	messageQueue.Enqueue(newMessage) // Добавляем сообщение в очередь

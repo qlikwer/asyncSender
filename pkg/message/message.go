@@ -5,10 +5,11 @@ import (
 )
 
 type Message struct {
-	Url         string `json:"Url"`
-	Data        string `json:"json data"`
-	RequestType string `json:"Request type"`
-	Iteration   int    `json:"Current iteration"`
+	Url         string              `json:"Url"`
+	Data        string              `json:"json data"`
+	RequestType string              `json:"Request type"`
+	Iteration   int                 `json:"Current iteration"`
+	Headers     map[string][]string `json:"Array of headers"`
 }
 
 type Queue struct {

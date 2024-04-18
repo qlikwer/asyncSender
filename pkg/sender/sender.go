@@ -25,10 +25,11 @@ type Sender struct {
 }
 
 type SendMessageParams struct {
-	Url         string `json:"Url"`
-	Data        string `json:"json data"`
-	RequestType string `json:"Request type"`
-	Iteration   int    `json:"Current iteration"`
+	Url         string              `json:"Url"`
+	Data        string              `json:"json data"`
+	RequestType string              `json:"Request type"`
+	Iteration   int                 `json:"Current iteration"`
+	Headers     map[string][]string `json:"Array of headers"`
 }
 
 func InitSender() (*Sender, error) {
@@ -59,8 +60,11 @@ func (b *Sender) SendMessage(params SendMessageParams) error {
 		logger.Errorf("Ошибка при создании запроса: %v", err)
 	}
 
-	req.Header.Set("Content-Type", "application/json")
-	req.SetBasicAuth("boobl", "booblgoom")
+	for key, values := range params.Headers {
+		for _, value := range values {
+			req.Header.Set(key, value)
+		}
+	}
 
 	resp, err := b.client.Do(req)
 	if err != nil {

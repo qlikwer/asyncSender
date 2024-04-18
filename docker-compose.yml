@@ -7,12 +7,12 @@ services:
     image: qlikwer/async-sender
     container_name: boobl-asyncSender # Вместо <project-name> укажите имя своего проекта
     ports:
-      - "8095:8080"
+      - "8080:8065"
     restart: unless-stopped
     environment:
       - TOKEN=test # Укажите здесь токен своего бота
     healthcheck:
-      test: [ "CMD", "curl", "--fail", "http://localhost:8080/api/health", "||", "exit", "1" ]
+      test: [ "CMD", "curl", "--fail", "http://localhost:8065/api/health", "||", "exit", "1" ]
       interval: 30s
       timeout: 10s
       retries: 3
