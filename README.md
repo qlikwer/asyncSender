@@ -21,8 +21,8 @@ Analytics, Яндекс метрику или Mindbox.
 docker-compose up --build 
 ``` 
 И вытаскиваем бинарник из контейнера, по пути /app/asyncSender.
-4. Копируем файл [asyncsender.service](/asyncsender.service) в удобное место на сервере, 
-указываем в нем нужные данные для запуска (путь до файла, имя пользователя, группу)
+4. Копируем файл [asyncsender.service_example](/asyncsender.service_example) в удобное место на сервере, 
+c имененем asyncsender.service, указываем в нем нужные данные для запуска (путь до файла, имя пользователя, группу)
 5. Создаем симлинк на этот файл в 
 ```bash
 /etc/systemd/system/asyncsender.service
